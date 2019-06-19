@@ -1,0 +1,45 @@
+#ifndef MYDB_H
+#define MYDB_H
+
+#include <QObject>
+#include <mysql/mysql.h>
+#include <string>
+#include <QStringList>
+#include <QFileInfo>
+#include <map>
+
+class MyDB : public QObject
+{
+    Q_OBJECT
+//    Q_PROPERTY(QStringList perferMusicList READ perferMusicList)
+//    Q_PROPERTY(QStringList rootList READ rootList)
+
+public:
+    MyDB();
+    ~MyDB();
+
+    bool initDB(std::string host, std::string user, std::string pwd, std::string db_name);
+
+    bool createDatabase(std::string& dbname);
+    bool createPassworddbTable();
+    
+    bool queryUserInfo(std::string user_id, std::string password);
+//    bool readTableData();
+//    Q_INVOKABLE bool addMusic(QString data);
+//    Q_INVOKABLE  bool deleteMusic(QString data);
+//    Q_INVOKABLE QString getMusicPath(QString listName, int id);
+//    Q_INVOKABLE QString getMusicName(QString listName, int id);
+//    Q_INVOKABLE bool noEnd(QString listName , int n);
+//    Q_INVOKABLE int getListLength(QString listName );
+
+signals:
+        void perferMusicListChange();
+
+private:
+    std::string music(std::string data);
+    MYSQL *mysql;//连接mysql句柄指针
+    MYSQL_RES *result;//指向查询结果的指针
+    MYSQL_ROW row;//返回行信息
+};
+
+#endif // MYDB_H
