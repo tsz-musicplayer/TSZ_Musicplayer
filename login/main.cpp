@@ -2,6 +2,15 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "login.h"
+#include "mydb.h"
+
+
+using std::string;
+
+string DB_server = "localhost";
+string DB_username = "root";
+string DB_password = "root";
+string DB_name = "mysql";
 
 int main(int argc, char *argv[])
 {
@@ -22,13 +31,17 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-//    const QUrl url(QStringLiteral("qrc:/login.qml"));
-//    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-//                     &app, [url](QObject *obj, const QUrl &objUrl) {
-//        if (!obj && url == objUrl)
-//            QCoreApplication::exit(-1);
-//    }, Qt::QueuedConnection);
-//    engine.load(url);
+    MyDB db;
+    db.initDB(DB_server, DB_username, DB_password, DB_name);
+    db.createPassworddbTable();
+//    db.queryUserInfo("tt","123");
+    //    const QUrl url(QStringLiteral("qrc:/login.qml"));
+    //    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+    //                     &app, [url](QObject *obj, const QUrl &objUrl) {
+    //        if (!obj && url == objUrl)
+    //            QCoreApplication::exit(-1);
+    //    }, Qt::QueuedConnection);
+    //    engine.load(url);
 
     return app.exec();
 }

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Controls 1.2
 import Login 1.0
 
@@ -60,10 +60,8 @@ ApplicationWindow {
         height: 32
         text: qsTr("登 录")
         onClicked:{
-//            testUserModel.user_id=textField1.text
-//            testUserModel.password=textField2.text
-            login(textField1.text, textField2.text)
-
+            testUserModel.user_id=textField1.text
+            testUserModel.password=textField2.text
         }
     }
 
@@ -73,10 +71,10 @@ ApplicationWindow {
         y: 200
         width: 110
         height: 32
-        text: qsTr("注 册")
+        text: qsTr("退 出")
         onClicked:
         {
-            sign(textField1.text, textField2.text)
+            Qt.quit();
         }
     }
 
@@ -98,12 +96,5 @@ ApplicationWindow {
         height: 100
         source: "qrc:/image/1.png"
         fillMode: Image.PreserveAspectFit
-    }
-    function login(account,password){
-        //testUserModel.checkUserinfo(account,password)
-        console.log(testUserModel.checkUserinfo(account,password))
-    }
-    function sign(account,password){
-        console.log(testUserModel.saveUserinfo(account,password))
     }
 }

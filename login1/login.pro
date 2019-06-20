@@ -30,9 +30,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += /usr/include/mysql
-LIBS += -L/usr/mysql -lmysqlclient_r
-
 HEADERS += \
     login.h \
     mydb.h

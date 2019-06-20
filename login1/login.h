@@ -23,12 +23,9 @@ public:
     QString password();
     void set_password(QString str);
 
-    Q_INVOKABLE bool checkUserinfo(QString account, QString password);
-    Q_INVOKABLE bool saveUserinfo(QString account, QString password);
-
 signals:
-    void sig_user_id_changed();
-    void sig_password_changed();
+   void sig_user_id_changed();
+   void sig_password_changed();
 
 private:
     QString m_user_id;
