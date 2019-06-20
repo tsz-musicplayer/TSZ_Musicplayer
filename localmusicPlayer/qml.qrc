@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/icon-music.png</file>
+        <file>images/icon-net.png</file>
+        <file>images/icon-person-center.png</file>
+        <file>images/icon-search.png</file>
+        <file>images/last.png</file>
+        <file>images/next.png</file>
+        <file>images/play.png</file>
+        <file>images/stop.png</file>
+        <file>images/music.png</file>
+        <file>images/download.png</file>
+        <file>images/enjoy.png</file>
+        <file>images/icon-enjoy.png</file>
+        <file>images/exit.png</file>
+        <file>qml/TopBar.qml</file>
+        <file>qml/Content.qml</file>
+        <file>qml/LocalMusicInterface.qml</file>
+        <file>qml/MenuButton.qml</file>
+        <file>qml/MyProgressBar.qml</file>
+        <file>qml/PlayBar.qml</file>
+        <file>qml/MusicList.qml</file>
+        <file>qml/MusicListBar.qml</file>
+        <file>qml/Test.qml</file>
+        <file>images/add.png</file>
+    </qresource>
+    <qresource prefix="/image"/>
+    <qresource prefix="/images"/>
+</RCC>
