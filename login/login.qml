@@ -58,7 +58,7 @@ ApplicationWindow {
         y: 200
         width: 116
         height: 32
-        text: qsTr("登 录")
+        text: qsTr("登 陆")
         onClicked:{
 //            testUserModel.user_id=textField1.text
 //            testUserModel.password=textField2.text
@@ -99,6 +99,7 @@ ApplicationWindow {
         source: "qrc:/image/1.png"
         fillMode: Image.PreserveAspectFit
     }
+
     function login(account,password){
         //testUserModel.checkUserinfo(account,password)
         console.log(testUserModel.checkUserinfo(account,password))

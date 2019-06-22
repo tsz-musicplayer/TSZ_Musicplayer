@@ -52,6 +52,7 @@ bool Login::checkUserinfo(QString account, QString password)
     string DB_name = "mysql";
     MyDB db;
     db.initDB(DB_server, DB_username, DB_password, DB_name);
+    db.useDatabase("Musicplayer");
     db.createPassworddbTable();
     db.queryUserInfo(account.toStdString(),password.toStdString());
 
@@ -65,6 +66,7 @@ bool Login::saveUserinfo(QString account, QString password)
     string DB_name = "mysql";
     MyDB db;
     db.initDB(DB_server, DB_username, DB_password, DB_name);
+    db.useDatabase("Musicplayer");
     db.createPassworddbTable();
     db.saveUserInfo(account.toStdString(),password.toStdString());
 }
