@@ -19,9 +19,10 @@ Rectangle {
     Rectangle {
         id: musicNameRect
         color: "transparent"
-        anchors.leftMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 20
         anchors.top: parent.top
-        anchors.topMargin: 20
+        anchors.topMargin: 10
         width: 150
         Text {
             id: musicName
@@ -37,9 +38,11 @@ Rectangle {
     // 进度条
     MyProgressBar {
         id: progressBar
-        anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 35
+        anchors.leftMargin: 20
+        anchors.bottomMargin: 10
+        anchors.top: parent.top
+        anchors.topMargin: 25
     }
 
     // 播放、暂停按钮
@@ -85,13 +88,14 @@ Rectangle {
                     playImg.source = "qrc:/images/play.png"
                     myPlayer.pause()
                 } else {
-                    console.log("play : " + bPlaying)
+                    console.log("重新播放")
 
                     bPlaying = true
                     playImg.source = "qrc:/images/stop.png"
-
                     myPlayer.play()
                 }
+
+               // myPlayer.playOnline("rtsp://192.168.43.194/zm.mp3")
             }
         }
     }
@@ -126,6 +130,11 @@ Rectangle {
             onClicked: {
 
                 //播放当前播放列表的上一首
+                currentIndex = (currentIndex-1 + myPlayListModel.musicCount()) % myPlayListModel.musicCount()
+                myPlayer.play(myPlayListModel.getMusicSource(currentIndex))
+                console.log("currentIndex:  ",currentIndex)
+                console.log("myPlayListModel.musicCount():  ",myPlayListModel.musicCount())
+                setMusicName(myPlayListModel.getMusicName(currentIndex))
 
             }
         }
@@ -159,10 +168,9 @@ Rectangle {
             }
             onClicked: {
                 //播放当前播放列表的下一首
-
-               playMusicSource = myPlayListModel.next()
-                myPlayer.play(playMusicSource)
-                playBar.setMusicName(name)
+                currentIndex = (currentIndex+1 + myPlayListModel.musicCount()) % myPlayListModel.musicCount()
+                myPlayer.play(myPlayListModel.getMusicSource(currentIndex))
+                setMusicName(myPlayListModel.getMusicName(currentIndex))
             }
         }
     }
@@ -171,8 +179,8 @@ Rectangle {
         id: enjoyRect
         width: iconSize
         height: iconSize
-        anchors.left: nextButton.right
-        anchors.leftMargin: 160
+        anchors.right:lyricRect.left
+        anchors.rightMargin: 30
         anchors.verticalCenter: parent.verticalCenter
         color: "transparent"
         Image {
@@ -192,14 +200,57 @@ Rectangle {
             }
             onClicked: {
 
-
                 //将音乐添加到歌单-我喜爱的音乐
+
+                //播放流媒体音乐
+                myPlayer.playOnline("rtsp://192.168.31.10/tf.mp3")
             }
         }
     }
 
+    //歌词
+    Rectangle {
+        id: lyricRect
+        width: iconSize
+        height: iconSize
+        anchors.right:parent.right
+        anchors.rightMargin: 60
+        anchors.verticalCenter: parent.verticalCenter
+        color: "transparent"
+        Image {
+            id: lyricImg
+            source: "qrc:/images/lyric.png"
+            width: iconSize
+            height: iconSize
+        }
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                lyricImg.visible = false
+            }
+            onReleased: {
+                lyricImg.visible = true
+            }
+            onClicked: {
+                //显示歌词界面
+                lyricInterface.visible = true
+                console.log("歌词的显示")
+
+                //隐藏其他界面
+                localMusicInterface.visible = false
+                onlineInterface.visible = false
+                songlistInterface.visible = false
+
+            }
+        }
+    }
+
+
     //设置音乐名称
     function setMusicName(name){
         musicName.text = name
+    }
+    function seekPostion(){
+        progressBar.value = myPlayer.position/myPlayer.duration
     }
 }

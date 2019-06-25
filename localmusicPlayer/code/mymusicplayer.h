@@ -17,12 +17,14 @@ public:
 
 
     Q_INVOKABLE void play(QString source);
+    Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
-    Q_INVOKABLE void setPosition(int position);
+    //Q_INVOKABLE void setPosition(int position);
 
     Q_INVOKABLE void setDocument(QString path);
     Q_INVOKABLE Songlist& playlist();
     Q_INVOKABLE void playOnline(QString source);
+
 
 //    Q_INVOKABLE void setUrl(/*QString url*/);
 

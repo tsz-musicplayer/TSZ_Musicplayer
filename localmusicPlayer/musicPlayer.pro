@@ -45,7 +45,8 @@ HEADERS += \
     code/singer.h \
     code/songlist.h \
     code/music.h \
-    code/mymusicplayer.h
+    code/mymusicplayer.h \
+    code/resolvemusic.h
 
 DISTFILES += \
     最美.mp3

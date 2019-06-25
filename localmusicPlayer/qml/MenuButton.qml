@@ -1,5 +1,5 @@
 import QtQuick 2.0
-//苏雪莲 菜单按钮
+//苏雪莲 自定义菜单按钮
 Rectangle {
     id: root
     property alias picSource: pic.source

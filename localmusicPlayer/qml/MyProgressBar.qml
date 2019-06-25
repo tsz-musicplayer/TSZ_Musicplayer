@@ -1,43 +1,37 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.2
 
+//苏雪莲
+//播放进度条
 
-//苏雪莲 进度条
-Rectangle {
-    id: root
-    width: 420
-    height: 40
-    color: "transparent"
+Slider{
+    width: 400
+    id:slider
+    x: -65
+    y: 25
+    value: proportion
+    MouseArea{
+        anchors.rightMargin: 65
+        anchors.bottomMargin: 8
+        anchors.leftMargin: -65
+        anchors.topMargin: -8
+        anchors.fill:parent
+        onClicked: {
+            proportion = (mouse.x-65) /width
 
-    Rectangle {
-        id: line
-        width: 320
-        height: 5
-        color: "#dba4ae"
-        radius: 3
-        anchors.centerIn: parent
-        Rectangle {
-            id: point
-            width: 8
-            height: 8
-            color: "white"
-            radius: 8
+            console.log("myPlayer.duration:", myPlayer.duration)
+            //更新播放器的进度
+            myPlayer.setPosition(proportion*myPlayer.duration)
+            timer.start()
+            //setValue()
         }
     }
 
-    Text {
-        id: presentTime
-        x: 13
-        text: qsTr("00:00")
-        anchors.verticalCenterOffset: 1
-        font.pixelSize: 12
-        anchors.verticalCenter: parent.verticalCenter
+    function setValue(){
+
+        value = myPlayer.position/myPlayer.duration
+
     }
-    Text {
-        id: endTime
-        x: 381
-        text: qsTr("00:00")
-        anchors.verticalCenterOffset: 1
-        font.pixelSize: 12
-        anchors.verticalCenter: parent.verticalCenter
-    }
+
 }
+

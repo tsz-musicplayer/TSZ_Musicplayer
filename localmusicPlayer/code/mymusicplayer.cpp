@@ -8,12 +8,9 @@
 #include <QTextCodec>
 
 #include <iostream>
-//在C++中引用C语言函数
-extern "C"
-{
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-}
+
+#include "resolvemusic.h"
+
 using namespace std;
 
 
@@ -29,8 +26,14 @@ void MyMusicPlayer::play(QString source)
     qDebug()<<"play :..";
 
     QMediaPlayer::setMedia(QUrl::fromLocalFile(source));
+    //QMediaPlayer::setMedia(QUrl("rtsp://192.168.42.59/a.mp3"));
     QMediaPlayer::play();
     emit playSuccessful();
+}
+
+void MyMusicPlayer::play()
+{
+    QMediaPlayer::play();
 }
 
 void MyMusicPlayer::pause()
@@ -42,10 +45,10 @@ void MyMusicPlayer::pause()
 }
 
 
-void MyMusicPlayer::setPosition(int position)
-{
-    QMediaPlayer::setPosition(position);
-}
+//void MyMusicPlayer::setPosition(int position)
+//{
+//    QMediaPlayer::setPosition(position);
+//}
 
 void MyMusicPlayer::setDocument(QString path)
 {
@@ -53,7 +56,6 @@ void MyMusicPlayer::setDocument(QString path)
     std::cout << m_docPath.toStdString() <<std::endl;
 
     QString fileter;
-
 
     m_playlist.clearList();
 
@@ -68,43 +70,18 @@ void MyMusicPlayer::setDocument(QString path)
             qDebug() << fileinfo.absoluteFilePath() << "  " << fileinfo.baseName();
 
 
-            QString name;
-            QString singer("未知歌手"); //歌手
-            QString album("未知专辑"); //专辑
-
-            //获取音乐信息
-            //name = fileinfo.baseName();
-
-            AVFormatContext *fmt_ctx = NULL;
-            AVDictionaryEntry *tag = NULL;
-
-            av_register_all();
-        //    /root/tmp/天份.mp3
-            char*  ch;
-            QByteArray ba = fileinfo.absoluteFilePath().toLatin1(); // must
-            ch=ba.data();
-            cout << ch << endl;
-
-            int ret;
-            if(ret = avformat_open_input(&fmt_ctx, ch, NULL, NULL)){
-                cout << "Fail to open file" << endl;
-            }
-cout << "+++++++" << endl;
-            //读取metadata中所有的tag
-            while ((tag = av_dict_get(fmt_ctx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))){
-                cout << "tags:" << endl;
-                cout << tag->key << + ": " << tag->value << endl;
-                string tmp = tag->key;
-                if(tmp== "album") album = tag->value;
-                if(tmp == "artist") singer = tag->value;
-                if(tmp == "title") name = tag->value;
-            }
 
             //Music *music = new Music(name, singer, album, fileinfo.absoluteFilePath());
             //添加文件夹中的音乐到playList
             //music->resolveSongInfo(path);
-           // m_playlist.addMusic(music->resolveSongInfo(path));
-            m_playlist.addMusic(new Music(name, singer, album, fileinfo.absoluteFilePath()));
+            //m_playlist.addMusic(music->resolveSongInfo(path));
+
+            m_playlist.addMusic(resolveLocalMusic(fileinfo));
+
+
+
+
+
         }
     }
 

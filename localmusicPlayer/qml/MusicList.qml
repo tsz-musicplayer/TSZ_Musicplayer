@@ -3,7 +3,6 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
 
-
 //周敏 音乐列表
 Item{
     id:musicListPage
@@ -43,19 +42,13 @@ Item{
             //        snapMode: ListView.SnapToItem //
             //        cacheBuffer: 2
             anchors.fill: parent
-            anchors.top: musicListBarTitle.bottom
+            //anchors.top: musicListBarTitle.bottom
             visible: true
-
+            currentIndex: currentIndex
             model: myPlayListModel
             delegate: detail
-        }
 
-//        ListModel{
-//            id:musicModel
-//            ListElement{name: "a1"; singer:"b"; album: "c"; time:"d"; size:"e"}
-//            ListElement{name: "a2"; singer:"b"; album: "c"; time:"d"; size:"e"}
-//            ListElement{name: "a3"; singer:"b"; album: "c"; time:"d"; size:"e"}
-//        }
+        }
 
     }
     Component{//委托显示音乐信息
@@ -64,6 +57,8 @@ Item{
             width: musicList.width
             height: musicListBarTitle.height
             y: musicListBarTitle.y + musicListBarTitle.height
+            color: musicList.isCurrentItem?"#157efb":"#53d769" //选中颜色设置
+
             //anchors.top: musicListBarTitle.bottom
             MusicListBar{
                 id:musicBar
@@ -74,30 +69,35 @@ Item{
                 listBar2: " " + name
                 listBar3: " " + singer
                 listBar4: " " + album
-//                listBar5: " " + time
-//                listBar6: " " + size
+                listBar5: " " + duration
+                listBar6: " " + size
 
                 coloring: index % 2 ? false : true
             }
+
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
                     console.log(index, source)
 
-                   // playMusicSource = myPlayListModel.next(index)
                     playMusicSource = source
                     myPlayer.play(playMusicSource)
+                    playBar.bPlaying = true
                     playBar.setMusicName(name)
-                    console.log("----------------")
-                    console.log(myPlayer.duration)
+
+                    console.log("myPlayer.duration:", myPlayer.duration)
+
+                    //设置更改当前播放索引
+                    currentIndex = index
+
+                    //高亮当前歌曲
 
 
-                    //                    wrapper.ListView.view.currentIndex = index
-                    //                        onDoubleClicked: wrapper.ListView.view.model.remove(index)
                 }
             }
         }
     }
+
 }
 
 

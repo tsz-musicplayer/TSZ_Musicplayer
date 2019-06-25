@@ -8,6 +8,7 @@ Item {
     height: 30
     anchors.top:parent.top
 
+
     property string listBar1 : "test"
     property string listBar2 : "test"
     property string listBar3 : "test"
@@ -21,6 +22,7 @@ Item {
 
     property int borderWidth : title ? 1 : 0
     property color borderColor :  title ? "grey" :"white"
+    property color highlightColor: "#dba4ae"
 
     property color musicBarColor : coloring ? "pink" : "white"
 
@@ -32,6 +34,8 @@ Item {
 //        }
 //        onDoubleClicked: listBar.ListView.view.model.remove(index)
 //    }
+
+
 
     Rectangle{
         id:bar1

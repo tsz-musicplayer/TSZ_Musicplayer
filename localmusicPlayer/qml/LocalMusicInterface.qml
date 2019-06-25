@@ -71,7 +71,7 @@ Rectangle {
         anchors.top: localMusic.bottom
 
         MusicList{
-            anchors.top: localMusic.bottom
+            //anchors.top: localMusic.bottom
             width: parent.width
             height: parent.height
             visible: true

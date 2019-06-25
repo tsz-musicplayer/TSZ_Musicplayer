@@ -18,27 +18,13 @@ extern "C"
 using namespace std;
 
 //周敏 音乐
-Music::Music(QString name, QString singer, QString albumName, QString musicSource, QObject *parent)
-    :QObject(parent),m_name(name), m_singer(singer), m_albumName(albumName), m_source(musicSource)
+Music::Music(QString name, QString singer, QString albumName, QString duration, QString size, QString musicSource, QObject *parent)
+    :QObject(parent),m_name(name), m_singer(singer), m_album(albumName),m_duration(duration),m_size(size), m_source(musicSource)
 {
 
 }
 
 
-////格式化时间
-//QString formatTime(int ms)
-//{
-//    int ss = 1000000;
-//    int mi = ss * 60;
-
-//    long minute = ms / mi;
-//    long second = (ms - minute * mi) / ss;
-
-//    QString min_tmp = QString("%1").arg(minute, 2, 10, QChar('0'));
-//    QString sec_tmp = QString("%1").arg(second, 2, 10, QChar('0'));
-//    QString res = min_tmp + ":" +sec_tmp;
-//    return res;
-//}
 
 
 //读取歌曲信息
@@ -106,14 +92,35 @@ QString Music::singer() const
     return m_singer;
 }
 
-QString Music::albumName() const
+QString Music::album() const
 {
-    return m_albumName;
+    return m_album;
 }
 
 Music::~Music()
 {
 
+}
+
+QString Music::lyric() const
+{
+    return m_lyric;
+}
+
+void Music::setLyric(const QString &lyric)
+{
+    m_lyric = lyric;
+}
+
+
+QString Music::duration() const
+{
+    return m_duration;
+}
+
+QString Music::size() const
+{
+    return m_size;
 }
 
 QString Music::source() const
