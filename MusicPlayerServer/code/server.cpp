@@ -1,5 +1,9 @@
 #include "server.h"
 
+Server::~Server()
+{
+}
+
 void Server::start_accept()
 {
   Session::Pointer session = Session::create(acceptor_.get_io_service());
@@ -10,6 +14,6 @@ void Server::start_accept()
 void Server::handle_accept(Session::Pointer session, const Server::Error &error)
 {
   if (error) return print_asio_error(error);
-  session->start();
+  session->receive_service();
   start_accept();
 }

@@ -1,4 +1,4 @@
-﻿#include <QDebug>
+﻿#include <iostream>
 #include <mysql/mysql.h>
 #include "mydb.h"
 
@@ -7,7 +7,7 @@ MyDB::MyDB()
     mysql = mysql_init(NULL);//初始化数据库
     if(mysql == NULL)
     {
-        qDebug() << "Error: 初始化失败";
+        std::cout << "Error: 初始化失败" << std::endl;
         exit(1);
     }
 }
@@ -21,15 +21,17 @@ MyDB::~MyDB()
 }
 
 
-bool MyDB::initDB(std::string host,std::string user,std::string passwd,std::string db_name)
+bool MyDB::connectDB(std::string host,std::string user,std::string passwd,std::string db_name)
 {
     //建立一个数据库连接
     mysql = mysql_real_connect(mysql, host.c_str(), user.c_str(), passwd.c_str(), db_name.c_str(), 0, NULL, 0);
     if(mysql == NULL)
     {
-        qDebug() << "Error: 连接数据库失败 "/* << mysql_error(mysql)*/;
+        std::cout << "Error: 连接数据库失败 "/* << mysql_error(mysql)*/;
         exit(1);
     }
+    useDatabase("Musicplayer");
+
     return true;
 }
 
@@ -42,10 +44,10 @@ bool MyDB::createDatabase(std::string dbname)
     {
         std::string queryStr = "use ";
         queryStr += dbname;
-        qDebug() << "创建并使用数据库";
+        std::cout << "创建并使用数据库";
         return true;
     }
-    qDebug() << "数据库已创建";
+    std::cout << "数据库已创建";
     return false;
 }
 
@@ -56,10 +58,10 @@ bool MyDB::useDatabase(std::string dbname)
     queryStr += dbname;
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "使用数据库";
+//        qDebug() << "使用数据库";
         return true;
     }
-    qDebug() << "数据库未创建";
+    std::cout << "数据库未创建";
     return false;
 }
 
@@ -71,19 +73,19 @@ bool MyDB::createPassworddbTable()
     {
         return true;
     }
-    qDebug() << "登录信息列表  创建失败";
+    std::cout << "登录信息列表  创建失败";
     return false;
 }
 
 //创建系统歌单列表
 bool MyDB::createMusicTable()
 {
-    std::string queryStr = "create table Music(path varchar(20), name char(20), lyric varchar(20), size varchar(20))";
+    std::string queryStr = "create table AllMusic(path varchar(20), name char(20), singer char(20), album char(20), duration char(20), lyric varchar(20), size varchar(20))";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
         return true;
     }
-    qDebug() << "系统歌单列表  创建失败";
+    std::cout << "系统歌单列表  创建失败";
     return false;
 }
 
@@ -95,7 +97,7 @@ bool MyDB::createsongListLabTable(std::string songListLab_name)
     {
         return true;
     }
-    qDebug() << "歌单列表  创建失败";
+    std::cout << "歌单列表  创建失败";
     return false;
 }
 
@@ -105,10 +107,10 @@ bool MyDB::createsongListTable(std::string songListLab_name, std::string songLis
     std::string queryStr = "create table "+songList_name+"_list(path varchar(100))";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        addsongList(songListLab_name, songList_name);
+        //addsongList(songListLab_name, songList_name);
         return true;
     }
-    qDebug() << "歌曲列表  创建失败";
+    std::cout << "歌曲列表  创建失败";
     return false;
 }
 
@@ -118,7 +120,7 @@ bool MyDB::addsongList(std::string songListLab_name, std::string songList_name)
     std::string queryStr = "INSERT INTO "+songListLab_name+"_lab VALUES('"+songList_name+"_list')";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "添加歌单成功";
+        std::cout << "添加歌单成功";
         return true;
     }
     return false;
@@ -131,7 +133,7 @@ bool MyDB::addMusic(std::string songList_name, std::string music_path)
     //qDebug()<<QString::fromStdString(user_id)<<QString::fromStdString(password);
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "添加歌曲成功";
+        std::cout << "添加歌曲成功";
         return true;
     }
     return false;
@@ -143,7 +145,7 @@ bool MyDB::deletesongListTable(std::string songListLab_name, std::string songLis
     std::string queryStr = "drop table "+songList_name+"_list";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "删除歌曲列表";
+        std::cout << "删除歌曲列表";
         deletesongListLabRecord(songListLab_name, songList_name);
         return true;
     }
@@ -157,7 +159,7 @@ bool MyDB::deletesongListLabRecord(std::string songListLab_name, std::string son
     //qDebug()<<QString::fromStdString(user_id)<<QString::fromStdString(password);
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "列表记录删除成功";
+        std::cout << "列表记录删除成功";
         return true;
     }
     return false;
@@ -170,7 +172,7 @@ bool MyDB::delectMusic(std::string songList_name, std::string music_path)
     //qDebug()<<QString::fromStdString(user_id)<<QString::fromStdString(password);
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "列表记录删除成功";
+        std::cout << "列表记录删除成功";
         return true;
     }
     return false;
@@ -190,7 +192,7 @@ bool MyDB::queryUserInfo(std::string user_id, std::string password)
                 return false;
             }
         }
-        qDebug() << "登录成功";
+        std::cout << "登录成功";
         return true;
     }
 }
@@ -203,26 +205,26 @@ bool MyDB::saveUserInfo(std::string user_id, std::string password)
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
 
-        qDebug() << "注册成功";
+        std::cout << "注册成功";
         return true;
     }
     return false;
 }
 
-//查询歌单列表
-bool MyDB::querysongListLab(std::string songListLab_name)
+//查询歌单池列表
+std::vector<std::string>  MyDB::querysongListLab(std::string songListLab_name)
 {
     std::string queryStr = "SELECT * FROM "+ songListLab_name+"_lab";
-    qDebug() << "歌单列表:";
-    queryList(queryStr);
+    std::cout << "歌单列表:";
+    return (queryList(queryStr));
 }
 
 //查询歌曲列表
-bool MyDB::querysongList(std::string songList_name)
+std::vector<std::string>  MyDB::querysongList(std::string songList_name)
 {
     std::string queryStr = "SELECT * FROM "+ songList_name+"_list";
-    qDebug() << "歌曲列表:";
-    queryList(queryStr);
+    //std::cout << "歌曲列表:";
+    return(queryList(queryStr));
 }
 
 
@@ -236,9 +238,9 @@ bool MyDB::queryMusic(std::string music_path)
         auto result = mysql_store_result(mysql);//获取结果集
         if (result){
             auto row = mysql_fetch_row(result);//获取结果集中的列
-            qDebug() << "路径："<<row[0]<<"歌名："<<row[1]<<"歌词"<<row[2]<<"歌曲大小："<<row[3];
+            std::cout << "路径："<<row[0]<<"歌名："<<row[1]<<"歌词"<<row[2]<<"歌曲大小："<<row[3];
         }else {
-            qDebug() << "Error: 读取列表失败";
+            std::cout << "Error: 读取列表失败";
             return false;
         }
     }
@@ -251,7 +253,7 @@ bool MyDB::search(std::string music)
     std::string queryStr = "SELECT * FROM Music WHERE name like '%n2%'";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        qDebug() << "tttt";
+        std::cout << "tttt";
         auto result = mysql_store_result(mysql);//获取结果集
         if (result){
             int num_rows = mysql_num_rows(result);//获取结果集中总共的行数
@@ -260,20 +262,22 @@ bool MyDB::search(std::string music)
             {
                 auto row = mysql_fetch_row(result);//获取结果集中的列
                 if(!row) break;
-                qDebug() << "路径："<<row[0]<<"歌名："<<row[1]<<"歌词"<<row[2]<<"歌曲大小："<<row[3];
+                std::cout << "路径："<<row[0]<<"歌名："<<row[1]<<"歌词"<<row[2]<<"歌曲大小："<<row[3];
             }
         }else {
-            qDebug() << "Error: 读取列表失败";
+            std::cout << "Error: 读取列表失败";
             return false;
         }
     }
-    qDebug() << "没有相关歌曲";
+    std::cout << "没有相关歌曲";
     return true;
 }
 
 //查询列表
-bool MyDB::queryList(std::string queryStr)
+std::vector<std::string>  MyDB::queryList(std::string queryStr)
 {   
+     std::vector<std::string> songlistLab;
+
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
         auto result = mysql_store_result(mysql);//获取结果集
@@ -283,14 +287,14 @@ bool MyDB::queryList(std::string queryStr)
             {
                 auto row = mysql_fetch_row(result);//获取结果集中的列
                 if(!row) break;
-                qDebug() << row[0];
+                songlistLab.push_back(row[0]);
             }
         }else {
-            qDebug() << "Error: 读取列表失败";
-            return false;
+            std::cout << "Error: 读取列表失败";
+//            return false;
         }
     }
-    return false;
+    return songlistLab;
 }
 
 

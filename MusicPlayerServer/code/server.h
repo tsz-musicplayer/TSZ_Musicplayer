@@ -16,13 +16,15 @@ public:
   Server(asio::io_service& io, unsigned port) :
       acceptor_(io, TCP::endpoint(TCP::v4(), port))
   {
-    start_accept();
+      start_accept();
   }
+  ~Server();
 
   static void print_asio_error(const Error& error) { std::cerr << error.message() << "\n";}
 
 private:
   void start_accept();
+
 
   //处理接收
   void handle_accept(Session::Pointer session, const Error& error);

@@ -1,22 +1,27 @@
 #ifndef MYDB_H
 #define MYDB_H
 
-#include <QObject>
 #include <mysql/mysql.h>
 #include <string>
-#include <QStringList>
-#include <QFileInfo>
 #include <map>
 
-class MyDB : public QObject
+class MyDB
 {
-    Q_OBJECT
 
 public:
     MyDB();
     ~MyDB();
 
-    bool initDB(std::string host, std::string user, std::string pwd, std::string db_name);
+    std::string DB_server = "localhost";
+    std::string DB_username = "root";
+    std::string DB_password = "root";
+    std::string DB_name = "mysql";
+
+    bool initDB(){
+        return connectDB(DB_server, DB_username, DB_password, DB_name);
+    }
+
+    bool connectDB(std::string host, std::string user, std::string pwd, std::string db_name);
 
     bool createDatabase(std::string dbname);
     bool useDatabase(std::string dbname);
@@ -39,8 +44,6 @@ public:
     bool queryMusic(std::string music_path);//获取歌曲信息(通过歌曲路径的形式查询歌曲信息)
     bool search(std::string music);//搜索 获取系统歌曲列表中的相关歌曲信息
 
-signals:
-    void perferMusicListChange();
 
 private:
     //    std::string music(std::string data);

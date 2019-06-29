@@ -1,14 +1,14 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.2
+import QtQuick 2.9
+import QtQuick.Window 2.2
+import QtQuick.Controls 1.4
 import Login 1.0
 
-ApplicationWindow {
+Window {
     visible: true
     width: 400
     height: 250
     color: "#ffffff"
     title: qsTr("QuickControlsDemo")
-
     Text {
         id: text1
         x: 0.25*parent.width
@@ -60,8 +60,8 @@ ApplicationWindow {
         height: 32
         text: qsTr("登 陆")
         onClicked:{
-//            testUserModel.user_id=textField1.text
-//            testUserModel.password=textField2.text
+            //            testUserModel.user_id=textField1.text
+            //            testUserModel.password=textField2.text
             login(textField1.text, textField2.text)
 
         }
@@ -108,3 +108,5 @@ ApplicationWindow {
         console.log(testUserModel.saveUserinfo(account,password))
     }
 }
+
+
