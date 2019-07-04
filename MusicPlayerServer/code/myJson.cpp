@@ -1,4 +1,4 @@
- #include "myJson.h"
+#include "myJson.h"
 #include <fstream>
 #include "json/json.h"
 #include <string>
@@ -13,8 +13,7 @@ MyJson::MyJson()
 
 }
 
-//封装json
-std::string MyJson::packageSonglistJson(const std::vector<std::string> data, const std::string file)
+std::string MyJson::packageSonglistJson(const std::string file)
 {
     Json::Value arrayObj;
     int n = 5;
@@ -23,7 +22,14 @@ std::string MyJson::packageSonglistJson(const std::vector<std::string> data, con
     std::vector<stru_music> songlist;
     stru_music music;
 
-    for(auto &t : data){
+    MyDB db;
+    db.initDB();
+//    db.createsongListTable("123", "MyMusic");
+//    db.addMusic("MyMusic", "rtsp://");
+
+    std::vector<std::string> resulte = db.querysongList("MyMusic");
+
+    for(auto &t : resulte){
         std::cout << t << std::endl;
         music.name = "name";
         music.singer = "singer";
@@ -62,63 +68,7 @@ std::string MyJson::packageSonglistJson(const std::vector<std::string> data, con
     return filename;
 }
 
-
-
-//std::string MyJson::packageSonglistJson(const std::string file)
-//{
-//    Json::Value arrayObj;
-//    int n = 5;
-//    Json::Value new_item;
-
-//    std::vector<stru_music> songlist;
-//    stru_music music;
-
-//    MyDB db;
-//    db.initDB();
-
-//    std::vector<std::string> resulte = db.querysongList("MyMusic");
-
-//    for(auto &t : resulte){
-//        std::cout << t << std::endl;
-//        music.name = "name";
-//        music.singer = "singer";
-//        music.album = "album";
-//        music.duration = "duration";
-//        music.size = "size";
-//        music.source = t;
-//        music.lyric = "lyric";
-
-//        songlist.push_back(music);
-//    }
-
-//    // 构建对象
-//    for (int i = 0; i < songlist.size() ; i++) {
-//        music = songlist[i];
-//        std::string x = std::to_string(i);
-//        new_item.clear();
-//        new_item["name"] = music.name;
-//        new_item["singer"] = music.singer;
-//        new_item["album"] = music.album;
-//        new_item["duration"] = music.duration;
-//        new_item["size"] = music.duration;
-//        new_item["source"] = music.source;
-//        new_item["lyric"] = music.lyric;
-//        arrayObj.append(new_item);
-//        // 插入成员
-//    }
-
-//    std::string filename = ".json";
-//    filename = path + file + filename;
-//    std::ofstream ofs;
-//    ofs.open(filename);
-//    ofs<< arrayObj.toStyledString();
-//    ofs.close();
-
-//    return filename;
-//}
-
-//解析json
-std::vector<stru_music> MyJson::analysisSonglistJson(const std::string file)
+void MyJson::analysisSonglistJson(const std::string file)
 {
     std::cout<<"读取json文件"<<std::endl;
     std::ifstream ifs;
@@ -127,9 +77,6 @@ std::vector<stru_music> MyJson::analysisSonglistJson(const std::string file)
     Json::Value jsonRoot;
     Json::Reader readerinfo;
     Json::Value root;
-    
-    std::vector<stru_music> songlist;
-    stru_music music;
     if(!ifs.is_open()){
         std::cout << "open file error" << std::endl;
     }
@@ -137,28 +84,26 @@ std::vector<stru_music> MyJson::analysisSonglistJson(const std::string file)
         if (jsonRoot.isArray()) {
             int nArraySize = jsonRoot.size();
             for (int i=0; i<nArraySize; i++) {
-                music.name = jsonRoot[i]["name"].asString();
-                music.singer = jsonRoot[i]["singer"].asString();
-                music.album = jsonRoot[i]["album"].asString();
-                music.duration = jsonRoot[i]["duration"].asString();
-                music.size = jsonRoot[i]["size"].asString();
-                music.source = jsonRoot[i]["source"].asString();
-                music.lyric = jsonRoot[i]["lyric"].asString();
+                std::string name = jsonRoot[i]["name"].asString();
+                std::string singer = jsonRoot[i]["singer"].asString();
+                std::string album = jsonRoot[i]["album"].asString();
+                std::string duration = jsonRoot[i]["duration"].asString();
+                std::string size = jsonRoot[i]["size"].asString();
+                std::string source = jsonRoot[i]["source"].asString();
+                std::string lyric = jsonRoot[i]["lyric"].asString();
 
-
-//                std::cout << name << std::endl;
-//                std::cout << singer << std::endl;
-//                std::cout << album << std::endl;
-//                std::cout << duration << std::endl;
-//                std::cout << size << std::endl;
+                std::cout << name << std::endl;
+                std::cout << singer << std::endl;
+                std::cout << album << std::endl;
+                std::cout << duration << std::endl;
+                std::cout << size << std::endl;
 
             }
+
         }
     }
-    return songlist;
 }
 
-//封装歌单
 std::string MyJson::packageSonglistLabJson(const std::string file)
 {
     Json::Value arrayObj;
@@ -197,30 +142,6 @@ std::string MyJson::packageSonglistLabJson(const std::string file)
     ofs.close();
 
     return filename;
-}
-
-//解析歌单
-std::vector<std::string> MyJson::analysisSonglistLabJson(const std::string file)
-{
-    std::cout<<"读取json文件"<<std::endl;
-    std::ifstream ifs;
-    ifs.open(file);
-
-    Json::Value jsonRoot;
-    Json::Reader readerinfo;
-    Json::Value root;
-    if(!ifs.is_open()){
-        std::cout << "open file error" << std::endl;
-    }
-    if (readerinfo.parse(ifs, jsonRoot)) {
-        if (jsonRoot.isArray()) {
-            int nArraySize = jsonRoot.size();
-            for (int i=0; i<nArraySize; i++) {
-                std::string songlist = jsonRoot[i]["songlist"].asString();
-                std::cout << songlist << std::endl;
-            }
-        }
-    }
 }
 
 

@@ -39,12 +39,16 @@ void Session::do_service(const Error& error)
     } else if ((strcmp(buffer_, "download") == 0)) {
         send();
     } else if(strcmp(buffer_, "online") == 0){
+        //发送在线歌单list
         onlineSonglist();
     } else if(strcmp(buffer_, "songlist") == 0){
+        //发送在线歌单
         sendSonglist();
     } else if(strcmp(buffer_, "custom") == 0){
         //接收用户自定义歌单
     }
+    //std::cout << "do_service end" << std::endl;
+    //return;
 
     receive_service();
 }
@@ -114,6 +118,7 @@ void Session::send()
 
     sendFile(filename.data());
 }
+
 
 void Session::handle_header(const Session::Error &error)
 {
@@ -190,11 +195,8 @@ void Session::sendSonglist()
     socket_.receive(asio::buffer(buffer_, download_path_max_size));
     std::string filename = buffer_;
     std::cout << "receive path: " << filename << std::endl;
-    MyDB db;
-    db.initDB();
-    std::vector<std::string> resulte = db.querysongList(filename);
     MyJson mjson;
-    std::string path = mjson.packageSonglistJson(resulte, filename);
+    std::string path = mjson.packageSonglistJson(filename);
     //生成json
     std::cout << "path" << path << std::endl;
     //传输json
