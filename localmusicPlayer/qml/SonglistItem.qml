@@ -10,6 +10,19 @@ Item {
         id:songlistPic
         width: 150
         height: 200
+        MouseArea{
+            anchors.fill: parent
+            onClicked:{
+                myPlayListModel.clearList()
+                songlistInterface.visible = true
+                songlistInterface.init(songlistname.text)
+                songlistInterface.backed()
+                myPlayer.setOnlineSonglist(songlistname.text)
+                myPlayer.setOnlinePlay()
+                myPlayListModel = myPlayer.playlist
+                console.log("You chose: " + songlistname.text)
+            }
+        }
     }
     Text{
         width: songlistPic.width
@@ -20,5 +33,4 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideNone
     }
-
 }

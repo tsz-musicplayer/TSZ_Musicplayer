@@ -3,7 +3,7 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.8
-
+//苏雪莲
 Rectangle {
     id: root
     width: 1000
@@ -92,7 +92,7 @@ Rectangle {
 
                     bPlaying = true
                     playImg.source = "qrc:/images/stop.png"
-                    myPlayer.play()
+                    myPlayer.play(playMusicSource)
                 }
 
                // myPlayer.playOnline("rtsp://192.168.43.194/zm.mp3")

@@ -9,8 +9,6 @@
 #include "string"
 
 
-
-
 class Music: public QObject
 {
     Q_OBJECT
@@ -23,7 +21,6 @@ public:
     Music(QString name, QString singer, QString albumName,QString duration,QString size, QString musicSource, QObject *parent = 0);
     //QString formatTime(int ms);
 
-
     QString name() const; //得到歌曲名字
     QString singer() const; //得到歌手名字
     QString album() const; //得到歌曲所属专辑名字
@@ -31,17 +28,12 @@ public:
     QString duration() const; //得到歌曲的时长
     QString size() const; //得到歌曲的大小
 
-
-
     ~Music();
 
     //signals:
     //    void nameChanged();
     //    void singerChanged();
     //    void albumNameChanged();
-
-
-
 
     QString lyric() const;
     void setLyric(const QString &lyric);

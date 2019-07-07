@@ -1,0 +1,2 @@
+1、执行目录：/live/mediaServer/ 下的可执行文件 live555MediaServer 既可打开流媒体服务器
+2、服务器程序中mia.cpp 中 init（）函数初始化数据库执行一次就可以了，重复执行会重复输入

@@ -8,10 +8,30 @@ Item {
         height: 60
         color: "#fcfcfc"
 
+        Text{
+            id:back
+            x: 8
+            y: 9
+            text: qsTr("   ")
+            enabled: false
+            font.pixelSize: 31
+            MouseArea{
+                id:backM
+                anchors.fill: parent
+                onClicked:{
+                    songlistInterface.visible = false
+                    back.enabled = false
+                    back.text = "    "
+                    console.log("You chose back")
+                }
+            }
+        }
+
         Text {
             id: songlistName
             x: 8
             y: 9
+            anchors.left: back.right
             text: qsTr("未知歌单")
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
@@ -35,6 +55,11 @@ Item {
     function init(name){
         songlistName.text = name
         //获取名为"name"的歌单
+    }
+
+    function backed(){
+        back.enabled = true
+        back.text = qsTr("<  ")
     }
 
 }

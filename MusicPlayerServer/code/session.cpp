@@ -48,9 +48,9 @@ void Session::do_service(const Error& error)
         //接收用户自定义歌单
     }
     //std::cout << "do_service end" << std::endl;
-    //return;
+    return;
 
-    receive_service();
+//    receive_service();
 }
 
 void Session::login()
@@ -184,7 +184,8 @@ void Session::handle_write(const Session::Error &error, size_t bytes_transferred
 
 void Session::onlineSonglist()
 {
-    std::string filename = getSonglistLab("OnlineLab");
+    std::string filename = getSonglistLab("Online");
+    std::cout << filename << std::endl;
     sendFile(filename.data());
     //发送文件
 }
@@ -194,9 +195,17 @@ void Session::sendSonglist()
     //接收歌单名
     socket_.receive(asio::buffer(buffer_, download_path_max_size));
     std::string filename = buffer_;
-    std::cout << "receive path: " << filename << std::endl;
+    std::cout << "receive path: " << buffer_ << std::endl;
     MyJson mjson;
-    std::string path = mjson.packageSonglistJson(filename);
+    std::vector<stru_music> data;
+
+    //获取data
+    MyDB db;
+    db.initDB();
+
+    data = db.querysongList(filename);
+
+    std::string path = mjson.packageSonglistJson(data, filename);
     //生成json
     std::cout << "path" << path << std::endl;
     //传输json
@@ -205,10 +214,20 @@ void Session::sendSonglist()
 
 std::string Session::getSonglistLab(std::string songlistName)
 {
+    std::vector<std::string> songlistLab;
+
+    MyDB db;
+    db.initDB();
+
+    songlistLab = db.querysongListLab(songlistName);
+    std::cout << "online size: " << songlistLab.size() << std::endl;
+    for(auto &s: songlistLab){
+        std::cout << s << std::endl;
+    }
     MyJson mjson;
-    std::string path = mjson.packageSonglistLabJson(songlistName);
+    std::string path = mjson.packageSonglistLabJson(songlistLab, songlistName);
+
     return path;
-    //db.createsongListLabTable("onlineLab");
 }
 
 void Session::sendFile(const char *filename)

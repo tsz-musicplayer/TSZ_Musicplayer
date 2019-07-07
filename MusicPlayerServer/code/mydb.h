@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "file_info.h"
 
 class MyDB
 {
@@ -41,9 +42,13 @@ public:
     bool queryUserInfo(std::string user_id, std::string password);//查询、判断帐号密码表中的信息
     bool saveUserInfo(std::string user_id, std::string password);//添加 帐号密码信息到列表
     std::vector<std::string>  querysongListLab(std::string songListLab_name);//获取歌单列表池（songListLab_name等同于user_id）
-    std::vector<std::string>  querysongList(std::string songList_name);//获取歌曲列表
-    bool queryMusic(std::string music_path);//获取歌曲信息(通过歌曲路径的形式查询歌曲信息)
+    std::vector<stru_music> querysongList(std::string songList_name);//获取歌曲列表
+    stru_music queryMusic(std::string music_path);//获取歌曲信息(通过歌曲路径的形式查询歌曲信息)
     bool search(std::string music);//搜索 获取系统歌曲列表中的相关歌曲信息
+
+
+    bool addMusicToSystem(std::string source, std::string name, std::string singer, std::string album, std::string duraiton, std::string lyric, std::string size);
+
 
 private:
     //    std::string music(std::string data);

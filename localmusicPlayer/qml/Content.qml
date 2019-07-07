@@ -61,9 +61,11 @@ Rectangle {
                 onClicked: {
                     //更改之前的设置
                     change(2)
-
                     findMusicButton.color = "#dba4ae"
                     //显示我的音乐界面
+                    myPlayListModel.clearList()
+                    myPlayer.setLocalPlay()
+                    songlistInterface.visible = false
                     localMusicInterface.visible = true
                     //更改当前按钮
                 }
@@ -82,6 +84,8 @@ Rectangle {
 
                     downloadButton.color = "#dba4ae"
                     //显示我的音乐界面
+                    myPlayListModel.clearList()
+                    myPlayer.setLocalPlay()
                     songlistInterface.visible = true
                     songlistInterface.init(downloadButton.text)
                 }
@@ -117,6 +121,7 @@ Rectangle {
 
                     enjoyMusicButton.color = "#dba4ae"
                     //显示我喜欢的音乐
+                    myPlayer.setOnlinePlay()
                     songlistInterface.visible = true
                     songlistInterface.init(enjoyMusicButton.text)
                 }

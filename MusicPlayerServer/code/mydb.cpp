@@ -58,7 +58,7 @@ bool MyDB::useDatabase(std::string dbname)
     queryStr += dbname;
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-//        qDebug() << "使用数据库";
+        //        qDebug() << "使用数据库";
         return true;
     }
     std::cout << "数据库未创建";
@@ -80,7 +80,7 @@ bool MyDB::createPassworddbTable()
 //创建系统歌单列表
 bool MyDB::createMusicTable()
 {
-    std::string queryStr = "create table AllMusic(path varchar(20), name char(20), singer char(20), album char(20), duration char(20), lyric varchar(20), size varchar(20))";
+    std::string queryStr = "create table AllMusic(path varchar(100), name char(20), singer char(20), album char(20), duration char(20), lyric varchar(20), size varchar(20))";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
         return true;
@@ -104,10 +104,10 @@ bool MyDB::createsongListLabTable(std::string songListLab_name)
 //创建歌曲列表
 bool MyDB::createsongListTable(std::string songListLab_name, std::string songList_name)
 {
-    std::string queryStr = "create table "+songList_name+"_list(path varchar(100))";
+    std::string queryStr = "create table "+songList_name+"(path varchar(100))";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
-        //addsongList(songListLab_name, songList_name);
+        addsongList(songListLab_name, songList_name);
         return true;
     }
     std::cout << "歌曲列表  创建失败";
@@ -117,7 +117,7 @@ bool MyDB::createsongListTable(std::string songListLab_name, std::string songLis
 //添加歌单列表
 bool MyDB::addsongList(std::string songListLab_name, std::string songList_name)
 {
-    std::string queryStr = "INSERT INTO "+songListLab_name+"_lab VALUES('"+songList_name+"_list')";
+    std::string queryStr = "INSERT INTO "+songListLab_name+"_lab VALUES('"+songList_name+"')";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
         std::cout << "添加歌单成功";
@@ -129,7 +129,7 @@ bool MyDB::addsongList(std::string songListLab_name, std::string songList_name)
 //添加歌曲列表
 bool MyDB::addMusic(std::string songList_name, std::string music_path)
 {
-    std::string queryStr = "INSERT INTO "+songList_name+"_list VALUES('"+music_path+"')";
+    std::string queryStr = "INSERT INTO "+songList_name+" VALUES('"+music_path+"')";
     //qDebug()<<QString::fromStdString(user_id)<<QString::fromStdString(password);
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
@@ -142,7 +142,7 @@ bool MyDB::addMusic(std::string songList_name, std::string music_path)
 //删除歌曲列表
 bool MyDB::deletesongListTable(std::string songListLab_name, std::string songList_name)
 {
-    std::string queryStr = "drop table "+songList_name+"_list";
+    std::string queryStr = "drop table "+songList_name;
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
         std::cout << "删除歌曲列表";
@@ -155,7 +155,7 @@ bool MyDB::deletesongListTable(std::string songListLab_name, std::string songLis
 //删除歌曲列表记录
 bool MyDB::deletesongListLabRecord(std::string songListLab_name, std::string songList_name)
 {
-    std::string queryStr = "delete from "+songListLab_name+"_lab where songlist='"+songList_name+"_list'";
+    std::string queryStr = "delete from "+songListLab_name+"_lab where songlist='"+songList_name+"'";
     //qDebug()<<QString::fromStdString(user_id)<<QString::fromStdString(password);
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
@@ -168,7 +168,7 @@ bool MyDB::deletesongListLabRecord(std::string songListLab_name, std::string son
 //删除歌曲(通过歌曲路径的形式查询歌曲信息)
 bool MyDB::delectMusic(std::string songList_name, std::string music_path)
 {
-    std::string queryStr = "delete from "+songList_name+"_list where path='"+music_path+"'";
+    std::string queryStr = "delete from "+songList_name+" where path='"+music_path+"'";
     //qDebug()<<QString::fromStdString(user_id)<<QString::fromStdString(password);
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
@@ -220,31 +220,50 @@ std::vector<std::string>  MyDB::querysongListLab(std::string songListLab_name)
 }
 
 //查询歌曲列表
-std::vector<std::string>  MyDB::querysongList(std::string songList_name)
+std::vector<stru_music>  MyDB::querysongList(std::string songList_name)
 {
-    std::string queryStr = "SELECT * FROM "+ songList_name+"_list";
-    //std::cout << "歌曲列表:";
-    return(queryList(queryStr));
+    std::vector<stru_music> song;
+    std::string queryStr = "SELECT * FROM "+ songList_name;
+
+    std::cout << "歌曲列表:";
+    std::vector<std::string> songlist = queryList(queryStr);
+    for(auto &s : songlist){
+        stru_music music;
+        music = queryMusic(s);
+        std::cout << "songlist path :" << music.name << std::endl;
+        if(strcmp(music.source.data(), "null")){
+            song.push_back(music);
+        }
+    }
+    return song;
 }
 
 
 //查询歌曲信息
-bool MyDB::queryMusic(std::string music_path)
+stru_music MyDB::queryMusic(std::string music_path)
 {
-    std::string queryStr = "SELECT * FROM Music WHERE path='"+ music_path+"'";
+    stru_music music;
+    music.source = "null";
+    std::string queryStr = "SELECT * FROM AllMusic WHERE path='"+ music_path+"'";
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
         //        qDebug() << "YYYY";
         auto result = mysql_store_result(mysql);//获取结果集
         if (result){
             auto row = mysql_fetch_row(result);//获取结果集中的列
+            music.source = row[0];
+            music.name = row[1];
+            music.singer = row[2];
+            music.album = row[3];
+            music.duration = row[4];
+            music.lyric = row[5];
+            music.size = row[6];
             std::cout << "路径："<<row[0]<<"歌名："<<row[1]<<"歌词"<<row[2]<<"歌曲大小："<<row[3];
         }else {
             std::cout << "Error: 读取列表失败";
-            return false;
         }
     }
-    return false;
+    return music;
 }
 
 //搜索获得系统歌曲列表中的信息
@@ -273,10 +292,20 @@ bool MyDB::search(std::string music)
     return true;
 }
 
+bool MyDB::addMusicToSystem(std::string source, std::string name, std::string singer, std::string album, std::string duration, std::string lyric, std::string size)
+{
+    std::string sql = "INSERT INTO AllMusic VALUES('"+ source + "','" + name + "','" + singer + "','" + album + "','"  + duration + "','" + lyric +"','" + size +"')";
+    if(0 == mysql_query(mysql, sql.c_str())){
+        std::cout << "成功添加歌曲到数据库";
+        return true;
+    }
+    return false;
+}
+
 //查询列表
 std::vector<std::string>  MyDB::queryList(std::string queryStr)
 {   
-     std::vector<std::string> songlistLab;
+    std::vector<std::string> songlistLab;
 
     if (0 == mysql_query(mysql,queryStr.c_str()))
     {
@@ -291,7 +320,7 @@ std::vector<std::string>  MyDB::queryList(std::string queryStr)
             }
         }else {
             std::cout << "Error: 读取列表失败";
-//            return false;
+            //            return false;
         }
     }
     return songlistLab;
@@ -326,7 +355,7 @@ std::vector<std::string>  MyDB::queryList(std::string queryStr)
 //    }
 
 //    //从数据库钟读取自定义歌单信息
-//    std::string sql1 = "select * from musicListPath";
+//    std::string s通过歌曲路径的形式查询歌曲信息ql1 = "select * from musicListPath";
 //    mysql_query(mysql, sql1.c_str());
 //    auto sresult1 = mysql_store_result(mysql);//获取结果集
 //    if (sresult1){

@@ -45,18 +45,15 @@ Rectangle {
 
         //音乐列表
 
-
         FileDialog {
             id: fileDialog
             title: "选择播放目录"
             folder: shortcuts.home
             selectFolder: true
             onAccepted: {
-
                 myPlayer.setDocument(fileUrl)
                 myPlayListModel = myPlayer.playlist
                 console.log("You chose: " + fileDialog.fileUrl)
-
             }
             onRejected: {
                 console.log("Canceled")

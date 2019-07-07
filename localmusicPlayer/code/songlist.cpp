@@ -15,6 +15,9 @@ QString Songlist::next(int index)
 void Songlist::clearList()
 {
     beginResetModel();
+    for(auto &s : _musics){
+        delete s;
+    }
     _musics.clear();
     endResetModel();
 }

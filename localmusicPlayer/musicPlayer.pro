@@ -9,6 +9,13 @@ LIBS += -L/usr/local/ffepeg/lib -lSDL2main -lSDL2 -lavformat  -lavcodec -lavutil
  -L/usr/local/lib -ltag -ltag_c\
 -L/usr/local/lib -lz
 
+
+INCLUDEPATH += /usr/include/mysql
+LIBS += -L/usr/mysql -lmysqlclient_r
+
+LIBS += -L /usr/include/boost -lboost_system
+LIBS += /usr/lib/libpthread.so.0 -ljsoncpp
+
 QT += multimedia
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -26,7 +33,9 @@ SOURCES += \
     code/singer.cpp \
     code/songlist.cpp \
     code/music.cpp \
-    code/mymusicplayer.cpp
+    code/mymusicplayer.cpp \
+    code/client.cpp \
+    code/myJson.cpp
 
 RESOURCES += qml.qrc
 
@@ -46,7 +55,11 @@ HEADERS += \
     code/songlist.h \
     code/music.h \
     code/mymusicplayer.h \
-    code/resolvemusic.h
+    code/resolvemusic.h \
+    code/client.h \
+    code/file_info.h \
+    code/myJson.h
 
 DISTFILES += \
     最美.mp3
+
